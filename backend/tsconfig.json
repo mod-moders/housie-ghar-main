@@ -15,9 +15,7 @@
     "sourceMap": true,
     "paths": {
       "@shared/*": ["./shared/*"]
-    },
-    "baseUrl": ".",
-    "ignoreDeprecations": "6.0"
+    }
   },
   "include": ["src/**/*", "shared/**/*.ts"],
   "exclude": ["node_modules", "dist"]

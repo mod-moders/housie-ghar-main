@@ -22,16 +22,22 @@ export default function StaffLogin() {
     setBusy(true);
     setError(null);
     try {
+      console.log("1. Calling login API...");
       const res = await apiFetch<{ token: string; user: AuthUser }>("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
+      console.log("2. Login response:", res);
       if (typeof window !== "undefined") {
         sessionStorage.setItem("hg_staff_token", res.token);
       }
+      console.log("3. Token stored:", sessionStorage.getItem("hg_staff_token"));
       setUser(res.user);
+      console.log("4. About to push /staff");
       router.push("/staff");
+      console.log("5. router.push called");
     } catch (e) {
+      console.log("CAUGHT ERROR:", e);
       setError(e instanceof Error ? e.message : "Login failed");
       setBusy(false);
     }
