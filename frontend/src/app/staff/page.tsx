@@ -66,9 +66,15 @@ export default function StaffDashboard() {
 
   // Authoritative profile (also restores the session after a reload)
   useEffect(() => {
+    console.log("A. /staff mounted, checking token:", typeof window !== "undefined" ? sessionStorage.getItem("hg_staff_token") : "SSR");
     apiFetch<{ user: AuthUser }>("/api/auth/me")
-      .then((res) => { setUser(res.user); setChecked(true); })
-      .catch(() => {
+      .then((res) => {
+        console.log("B. /api/auth/me SUCCESS:", res);
+        setUser(res.user);
+        setChecked(true);
+      })
+      .catch((err) => {
+        console.log("C. /api/auth/me FAILED:", err, "status:", err?.status);
         if (typeof window !== "undefined") {
           sessionStorage.removeItem("hg_staff_token");
         }
@@ -97,7 +103,7 @@ export default function StaffDashboard() {
   const active = section ?? nav[0]?.[0] ?? null;
 
   const loadHud = useCallback(() => {
-    apiFetch<FinancialHud>("/api/wallet/hud").then(setHud).catch(() => {});
+    apiFetch<FinancialHud>("/api/wallet/hud").then(setHud).catch(() => { });
   }, []);
 
   useEffect(() => {
