@@ -28,11 +28,18 @@ export default function StaffLogin() {
         body: JSON.stringify({ email, password }),
       });
       console.log("2. Login response:", res);
+
       if (typeof window !== "undefined") {
+        // 1. Keep storage for client state if needed by components
         sessionStorage.setItem("hg_staff_token", res.token);
+
+        // 2. Set an authoritative cookie so Next.js Middleware can read it on route switches
+        document.cookie = `hg_staff_token=${res.token}; path=/; max-age=604800; SameSite=Lax; Secure`;
       }
-      console.log("3. Token stored:", sessionStorage.getItem("hg_staff_token"));
+
+      console.log("3. Token stored safely in session and cookies.");
       setUser(res.user);
+
       console.log("4. About to push /staff");
       router.push("/staff");
       console.log("5. router.push called");
