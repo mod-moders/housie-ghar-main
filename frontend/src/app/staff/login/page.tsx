@@ -30,19 +30,20 @@ export default function StaffLogin() {
       console.log("2. Login response:", res);
 
       if (typeof window !== "undefined") {
-        // 1. Keep storage for client state if needed by components
         sessionStorage.setItem("hg_staff_token", res.token);
 
-        // 2. Set an authoritative cookie so Next.js Middleware can read it on route switches
+        // NOTE: Replace "hg_staff_token" below with the exact value string of 
+        // CONSTANTS.JWT_COOKIE_NAME found in your backend/src/config/constants file!
         document.cookie = `hg_staff_token=${res.token}; path=/; max-age=604800; SameSite=Lax; Secure`;
       }
 
-      console.log("3. Token stored safely in session and cookies.");
+      console.log("3. Token stored safely.");
       setUser(res.user);
 
-      console.log("4. About to push /staff");
-      router.push("/staff");
-      console.log("5. router.push called");
+      console.log("4. Forcing hard page transfer to /staff");
+      // Using standard browser location instead of router.push to break out of Next.js router loop freezes
+      window.location.href = "/staff";
+
     } catch (e) {
       console.log("CAUGHT ERROR:", e);
       setError(e instanceof Error ? e.message : "Login failed");
